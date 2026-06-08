@@ -20,9 +20,9 @@ export default defineConfig({
 				},
 			],
 			sidebar: [
-				{ label: 'Architecture', slug: 'architecture' },
-				{ label: 'Application Examples', slug: 'application-examples' },
+				{ label: 'The Technique', slug: 'technique' },
 				{ label: 'Design Space', slug: 'design-space' },
+				{ label: 'Application Examples', slug: 'application-examples' },
 				{ label: 'Changelog', slug: 'changelog' },
 			],
 		}),

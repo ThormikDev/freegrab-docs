@@ -16,17 +16,16 @@ Entries are reverse-chronological (newest first).
 - Reconciled three drifting planning artifacts (the 3D `ROADMAP_V1`, the canvas-2D "Reset + Refactor" plan, and the toolkit package vision) into a single ordered plan, committed as `ROADMAP-V2.md` in the main repo.
 - Locked five decisions: (1) contract-first refactor, (2) decompose-in-place then extract to packages, (3) static-site docs from Markdown, (4) git source safety, (5) a ranked-internally / single-exposed selection-candidate model.
 - Put the main Unity project under version control for the first time (it was not a git repo) and recorded a pre-refactor baseline commit.
-- Kicked off this documentation site: chose Astro + Starlight on GitHub Pages, in a dedicated public repo separate from the heavy/private Unity project.
+- Stood up this Astro + Starlight documentation site and published it to GitHub Pages at https://thormikdev.github.io/freegrab-docs/ — auto-deploying from `main` (CI pinned to Node 24).
+- Reframed the site around a clean three-layer story — **paradigm → technique → applications** — with the design axioms on the home page, a new *The Technique* concept page, and the *Design Space* as a living, tabular HCI-style artifact. **Deferred** any code-architecture diagrams until the implementation stabilizes.
 
 **Why.**
 - The technique's framing ("FreeGrab *extends* Gaze+Pinch with coexistence, not replaces it") needed to be reflected consistently in both the plan and the code. The planning docs had diverged enough that "where are we" was ambiguous.
 - The biggest architectural flaw — the 3D `Vertex/Edge/Face` point-of-interest vocabulary overloaded onto 2D widgets (Button/Slider/Panel) — blocks sub-component selection and the slide editor. Fixing the selection contract first avoids re-threading every interactor subsystem later.
 - A large refactor with no version control was an unacceptable risk.
-
-- Stood up this Astro + Starlight documentation site and published it to GitHub Pages at https://thormikdev.github.io/freegrab-docs/ — auto-deploying from `main`.
+- The previous Mermaid architecture diagrams had low communicative value, and Phase 1+ will move a lot of code. The clearest way to communicate the project now is to make the axioms explicit, keep the design space living and tabular, and make "what is what" unambiguous — not to diagram a codebase mid-refactor.
 
 **Next.**
-- Migrate the architecture and design-space Mermaid-Markdown docs from the main repo into the site (adds client-side Mermaid rendering).
 - Record short demonstrator clips for the Application Examples gallery.
 - Begin **Phase 1**: the geometry-agnostic selection contract (`FreeGrabSelectionKind`, `FreeGrabSelectionCandidate`, `IFreeGrabSelectionProvider`) with a point-of-interest → candidate adapter so nothing regresses.
 

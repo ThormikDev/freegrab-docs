@@ -3,7 +3,7 @@ title: Application Examples
 description: Short video demonstrations of FreeGrab across target geometries.
 ---
 
-Each demonstrator is a small, captioned video clip showing FreeGrab on a different target geometry. Clips live in `public/videos/` (committed, compressed). This page becomes a gallery of the technique "in the wild."
+Each demonstrator is a small, captioned video clip showing FreeGrab on a different target geometry. **Every example is an instantiation of the [Design Space](/freegrab-docs/design-space/)** — a particular setting of the design parameters, not a separate system. Clips live in `public/videos/` (committed, compressed); this page is the gallery of the technique "in the wild."
 
 > 🚧 Clips not yet recorded. The structure below is the intended layout; each entry gets a `<video>` embed once footage exists.
 

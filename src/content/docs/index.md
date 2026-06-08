@@ -1,14 +1,27 @@
 ---
 title: FreeGrab
-description: A refinement-based, gaze-assisted indirect pointing technique for XR.
+description: A multimodal gaze + manual-refinement interaction technique for XR, and the design space it opens.
 ---
 
-**FreeGrab is a refinement-based, gaze-assisted indirect pointing technique for XR.**
-Gaze+Pinch is the foundation; FreeGrab is the refinement layer that materializes when the user signals intent for precision.
+**FreeGrab is, first and foremost, an interaction technique** for XR: it lets a user act on *gazeable targets* by combining **coarse acquisition through gaze** with **precise refinement through the hand**. Gaze+Pinch is the foundation; FreeGrab is the refinement layer that materializes when the user signals intent for precision.
 
-It decouples **coarse target acquisition** (eye gaze) from **precise sub-target pointing** (a hand-steered cursor with configurable control–display gain), and generalizes the same machine across 3D volumes, 2D panels, 2.5D layered UI, and 1D tracks.
+Because it is a *technique*, not an application, the same machine drives many tasks — and the systematic study of what that machine can do is the research contribution.
 
----
+:::note[Working title]
+"FreeGrab" is a tentative name for the technique while the research is in progress.
+:::
+
+## What is what
+
+The project has three clearly separated layers. Keeping them distinct is essential to the research framing.
+
+| Layer | What it is | Examples |
+|---|---|---|
+| **Paradigm** | Multimodal **gaze + manual refinement**: gaze acquires, the hand refines, a pinch commits. | — |
+| **Technique** | **FreeGrab** — the concrete instantiation of the paradigm that steers a cursor over gazeable targets, with snapping, control–display gain, and a latent cursor. | — |
+| **Applications** | Real tasks the technique *drives*. Each is an instantiation of design choices within the paradigm. | Modeling via mesh manipulation; UI navigation in 1D, 2D, 2.5D, and 3D. |
+
+The **design space** is the thorough exploration of *what we can do with this kind of multimodal gaze + manual refinement*. Every application example is a point in that space — a particular setting of the design parameters, not a separate system. See **[The Technique](/freegrab-docs/technique/)** for the conceptual model and **[Design Space](/freegrab-docs/design-space/)** for the living exploration.
 
 ## The interaction in one breath
 
@@ -18,8 +31,6 @@ It decouples **coarse target acquisition** (eye gaze) from **precise sub-target 
 4. **Pinch commits** — on whatever the cursor (or gaze, if no cursor) is bound to.
 
 Plain Gaze+Pinch always works; FreeGrab is purely additive on top of it.
-
----
 
 ## Design axioms
 
@@ -34,11 +45,9 @@ The invariants the technique defends. Every feature is measured against these.
 7. **The boundary is a gradient, not a wall.** Corners arm resize, edges arm move/1D-resize, the membrane is the soft escape — a continuous interaction map.
 8. **One paradigm across 1D / 2D / 2.5D / 3D.** The test of generalization is that the same machine handles all geometries without forking the code path.
 
----
-
 ## Explore
 
-- **Architecture** — the technique model, the target/provider/editable contract, and the per-frame execution pipeline.
-- **Application Examples** — short video demonstrations: the Moravian-star deformation, the 2D panel, the slider, and (soon) the slide editor.
-- **Design Space** — the eight design axes (D1–D8) and four demonstrator contexts (C1–C4) that frame the systematic exploration.
-- **Changelog** — a session-by-session record of how the project and its thinking evolve.
+- **[The Technique](/freegrab-docs/technique/)** — the conceptual model: gazeable targets, the gaze + manual-refinement loop, and how technique, content, and application separate.
+- **[Design Space](/freegrab-docs/design-space/)** — the living, tabular exploration of the design axes and the contexts/applications that instantiate them.
+- **[Application Examples](/freegrab-docs/application-examples/)** — short video demonstrations of instantiations across target geometries.
+- **[Changelog](/freegrab-docs/changelog/)** — a session-by-session record of how the project and its thinking evolve.
