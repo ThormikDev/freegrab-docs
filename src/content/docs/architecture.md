@@ -3,8 +3,6 @@ title: Architecture
 description: The FreeGrab technique model, contracts, and execution pipeline.
 ---
 
-# Architecture
-
 > 🚧 To be migrated from the main repo's existing documentation set
 > (`Assets/Scripts/FreeGrab/Documentation/` — eight Mermaid-Markdown documents).
 

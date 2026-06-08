@@ -8,7 +8,9 @@ Built with [Astro](https://astro.build/) + [Starlight](https://starlight.astro.b
 
 ## Status
 
-🚧 Scaffolding in progress. Initial content is staged in [`_content/`](_content/) and will be moved into `src/content/docs/` once the Astro Starlight project is generated.
+✅ **Live:** https://thormikdev.github.io/freegrab-docs/
+
+Astro + Starlight site is scaffolded and auto-deploying from `main` via GitHub Actions. Home page carries the design axioms; architecture and design-space pages are stubs pending migration of the Mermaid-Markdown docs from the main repo.
 
 ---
 
@@ -41,7 +43,7 @@ npm run dev                           # local preview at http://localhost:4321
 
 Pushing to `main` triggers the GitHub Action (`.github/workflows/deploy.yml`), which builds the site and publishes it to GitHub Pages. Live URL after the first deploy:
 
-```
+```text
 https://<your-github-username>.github.io/freegrab-docs/
 ```
 
@@ -55,7 +57,7 @@ npm run build && npm run preview
 
 ## Repository layout (target)
 
-```
+```text
 freegrab-docs/
 ├── astro.config.mjs            # site URL, base path, Starlight + Mermaid integrations
 ├── src/content/docs/

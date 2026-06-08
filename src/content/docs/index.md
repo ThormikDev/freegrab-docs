@@ -3,8 +3,6 @@ title: FreeGrab
 description: A refinement-based, gaze-assisted indirect pointing technique for XR.
 ---
 
-# FreeGrab
-
 **FreeGrab is a refinement-based, gaze-assisted indirect pointing technique for XR.**
 Gaze+Pinch is the foundation; FreeGrab is the refinement layer that materializes when the user signals intent for precision.
 

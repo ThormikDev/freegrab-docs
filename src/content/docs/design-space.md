@@ -3,8 +3,6 @@ title: Design Space
 description: The eight design axes and four demonstrator contexts framing the FreeGrab exploration.
 ---
 
-# Design Space
-
 > 🚧 To be migrated from the main repo's `Assets/Scripts/FreeGrab/Documentation/canvas-2d/00-design-space.md`.
 
 FreeGrab is, fundamentally, **an indirection technique that adds hand transport and hand–eye coordination as first-class citizens to the gaze-assisted indirection paradigm**. The exploration asks: *what does the paradigm look like when the steered cursor lives on a 2D, 2.5D, layered, or 1D target — and what design choices does that force?*

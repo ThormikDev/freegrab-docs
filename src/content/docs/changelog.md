@@ -3,8 +3,6 @@ title: Changelog
 description: Session-by-session record of the FreeGrab project's evolution.
 ---
 
-# Changelog
-
 A curated, human-readable record of each working session — *what* changed, *why*, and *what's next*. The git history of the FreeGrab and freegrab-docs repos is the precise record beneath this narrative; this page is the memory.
 
 Entries are reverse-chronological (newest first).
@@ -25,9 +23,12 @@ Entries are reverse-chronological (newest first).
 - The biggest architectural flaw — the 3D `Vertex/Edge/Face` point-of-interest vocabulary overloaded onto 2D widgets (Button/Slider/Panel) — blocks sub-component selection and the slide editor. Fixing the selection contract first avoids re-threading every interactor subsystem later.
 - A large refactor with no version control was an unacceptable risk.
 
+- Stood up this Astro + Starlight documentation site and published it to GitHub Pages at https://thormikdev.github.io/freegrab-docs/ — auto-deploying from `main`.
+
 **Next.**
-- Stand up the Astro Starlight site (Node + GitHub auth), migrate the architecture and design-space docs in, publish to GitHub Pages.
-- Then begin **Phase 1**: the geometry-agnostic selection contract (`FreeGrabSelectionKind`, `FreeGrabSelectionCandidate`, `IFreeGrabSelectionProvider`) with a point-of-interest → candidate adapter so nothing regresses.
+- Migrate the architecture and design-space Mermaid-Markdown docs from the main repo into the site (adds client-side Mermaid rendering).
+- Record short demonstrator clips for the Application Examples gallery.
+- Begin **Phase 1**: the geometry-agnostic selection contract (`FreeGrabSelectionKind`, `FreeGrabSelectionCandidate`, `IFreeGrabSelectionProvider`) with a point-of-interest → candidate adapter so nothing regresses.
 
 ---
 
