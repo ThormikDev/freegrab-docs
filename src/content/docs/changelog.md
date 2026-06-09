@@ -9,6 +9,22 @@ Entries are reverse-chronological (newest first).
 
 ---
 
+## 2026-06-09 — Phase 1: geometry-agnostic selection contract
+
+**What.**
+- Landed the selection contract that retires the `Vertex/Edge/Face` overload: separated **`FreeGrabSelectionKind`** (semantic identity → commit meaning) from **`FreeGrabSelectionGeometry`** (snap shape → magnetism). Added `FreeGrabSelectionCandidate`, `IFreeGrabSelectionProvider`, and a lossless point-of-interest ⇄ candidate adapter.
+- Reworked `FreeGrabTarget` to rank across both new providers and adapted legacy providers through one authoritative, allocation-free spine; reimplemented the old POI query as a thin compatibility view so the interactor, cursor visualizer, and content providers stayed untouched and behaviourally identical.
+- Added 7 EditMode regression tests (adapter round-trips, legacy equivalence on the cube deformer, mixed-provider ranking, geometry tie-break) — all green; no compile errors.
+
+**Why.**
+- The POI vocabulary overload was the most expensive deferred decision. Fixing the contract *first* (before decomposing the interactor) avoids re-threading every subsystem later. Separating geometry from kind answers "is a slider an Edge?" cleanly: a slider is `Kind = Widget, Geometry = Segment`.
+
+**Next.**
+- Verification workflow is set: the agent monitors the Unity console for compile errors via the editor bridge; the researcher tests the human-in-the-loop interaction over Quest Link. Pure-logic parts get EditMode tests.
+- Continue Phase 1 (migrate the canvas provider to emit `Widget` candidates; carry the candidate on the edit context) or begin Phase 2 (decompose the interactor).
+
+---
+
 ## 2026-06-08 — Re-orientation, ROADMAP-V2, and docs-site kickoff
 
 **What.**
