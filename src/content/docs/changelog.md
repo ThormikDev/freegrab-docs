@@ -9,6 +9,21 @@ Entries are reverse-chronological (newest first).
 
 ---
 
+## 2026-06-09 — Phase 2: interactor decomposition begins (Steps 1–3)
+
+**What.**
+- Began decomposing the ~1900-line `FreeGrabInteractor` into focused, single-responsibility units (plain C# classes the interactor owns; all serialized config stays on the interactor, so existing scenes keep their tuned settings). Landed three: **SnapResolver** (snap + motion-guided intent), **CursorNavigation** (control–display gain / visual-angle mapping), and **FreeTransform** (unimanual + bimanual whole-object manipulation). Promoted the shared per-cursor state to a top-level `CursorRuntimeState` "blackboard" the subsystems read and write.
+- Established an `InternalsVisibleTo` seam so the extracted internals stay unit-testable, and a working rhythm: the agent monitors the Unity console for compile errors via the editor bridge; the researcher runs EditMode tests and headset checks.
+- Logged a known issue: after deformation the cursor can sit inside the target's bounds/collider but outside the visible mesh — the surface constraint *approximates* the geometry (AABB / convex collider / discrete face features) instead of computing the true nearest point on the live mesh. Proposed fix: a content-provided `IFreeGrabSurfaceConstraint`, consistent with the selection-candidate contract.
+
+**Why.**
+- The monolith forced every new feature through one giant class. Decomposing around the shared cursor state makes the system navigable and each concern independently alterable — the prerequisite for a clean design-space exploration.
+
+**Next.**
+- Continue: cursor-visual authority, pinch steering (with the structural fix for the cursor-drift bug), latent cursor refinement, then a thin coordinator + facade.
+
+---
+
 ## 2026-06-09 — Phase 1: geometry-agnostic selection contract
 
 **What.**
