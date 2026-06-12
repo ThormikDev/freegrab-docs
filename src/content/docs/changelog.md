@@ -9,6 +9,21 @@ Entries are reverse-chronological (newest first).
 
 ---
 
+## 2026-06-12 — Phase 2 decomposition complete
+
+**What.**
+- Finished decomposing `FreeGrabInteractor` (~1900 → ~860 lines; now config + per-frame orchestration + facade). Six focused units own the leaf concerns: `FreeGrabSnapResolver` (snap + intent), `FreeGrabCursorNavigation` (control–display gain), `FreeGrabFreeTransform` (unimanual + bimanual), `FreeGrabCursorVisualAuthority` (cursor appearance), the shared `FreeGrabCursorState` blackboard, and a `FreeGrabInteractor` wiring partial. Added an `IFreeGrabCursorSource` facade for code-level consumers (tests, replay, study tools).
+- **Critical finding:** the prescribed cursor-drift "fix" was a misdiagnosis — the pinch steering is already absolute-from-start (non-accumulating), so frame-incremental "fixing" would *introduce* drift. Dropped it; if 2D drift recurs it's the gaze pipeline (where doc-06 traced it).
+- Kept the per-frame orchestration (gaze → hover → pinch) as the interactor's coordinator role rather than extracting it — it depends on every collaborator, so extraction would only add plumbing. Likewise the wiring is a `partial class` file-split, not a separate object, because it is MonoBehaviour-lifecycle code.
+
+**Why.**
+- The leaf computations are now independently testable and alterable, and the interactor reads as a legible sequence — the navigable foundation for resuming the design-space exploration.
+
+**Next.**
+- Resume Phase 5 (sub-component selection / demonstrators), fix the noted surface-constraint issue, or extract the technique to a UPM package.
+
+---
+
 ## 2026-06-09 — Phase 2: interactor decomposition begins (Steps 1–3)
 
 **What.**
