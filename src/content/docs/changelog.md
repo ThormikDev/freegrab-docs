@@ -9,6 +9,21 @@ Entries are reverse-chronological (newest first).
 
 ---
 
+## 2026-06-22 — Geometry congruency fixes + sub-component selection (Steps A–B)
+
+**What.**
+- **Surface congruency:** added a content-provided `IFreeGrabSurfaceConstraint` (exact closest-point-on-triangle in the mesh deformer) so the cursor stays on the deformed surface instead of the bounding box / convex hull. That exposed a deeper selection regression, fixed by excluding intra-face triangulation **diagonals** from selectable edges — so a coarse "throw at a face" reliably lands on the face (and two long-standing deformer test reds went green). A minor visual residual (cursor occasionally on the wrong side of a face after a hard throw) is logged for a later pass.
+- **Sub-component selection** (gaze a parent, refine to a child) begun: `FreeGrabHierarchySelectionProvider` exposes a composite's children as `SubObject` candidates on the Phase 1 contract (the cursor snaps to them with *no* interactor changes); `FreeGrabSubObjectHighlighter` outlines the hovered child via QuickOutline as a decoupled observer; a demo bootstrap builds a synthetic vehicle (body + 4 wheels) to test against.
+- **Architecture decision:** "enter/leave a sub-component" is modelled as a *pluggable scope-transition* over a stable scope + candidate core, so mechanisms (depth push-through, hand-openness, pinch, dwell) can be A/B'd. v0.1 uses the hovered sub-object as the implicit scope; the **depth push-through membrane** is the first descend mechanism to prototype.
+
+**Why.**
+- The constraint must *guide* — coarse movements should land on the intended feature. The surface + crease fixes restore that for mesh faces; sub-component selection extends "gaze coarse, hand precise" one level down (the car-wheel / slide-editor test case).
+
+**Next.**
+- Step C: candidate migration so a pinch free-transforms the hovered sub-object (move the wheel); then prototype depth-push-through descend for nested mesh refinement.
+
+---
+
 ## 2026-06-12 — Phase 2 decomposition complete
 
 **What.**
