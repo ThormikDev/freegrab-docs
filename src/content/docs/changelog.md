@@ -9,6 +9,26 @@ Entries are reverse-chronological (newest first).
 
 ---
 
+## 2026-06-22 — Composite surface constraint + sub-object free-transform (Step C)
+
+**What.**
+- **Composite navigable surface.** Headset testing of the sub-component demo showed the cursor floating in *empty space* — the parent's crude box collider was mostly air between the body and wheels, and the cursor roamed it. Fix (the researcher's diagnosis): a composite target's navigable surface is the **union of its child meshes**, not the bounding box. New `FreeGrabCompositeSurfaceConstraint` (an `IFreeGrabSurfaceConstraint`, auto-collected exactly like the deformer's) returns the nearest point across all child triangles, so the cursor rides the real body+wheels geometry and moves *freely* between parts — **no hard snapping** (rejected as too "sticky" for navigating complex meshes; light assistance + the enter/exit membrane will come instead). Shared closest-point-on-triangle math extracted to `FreeGrabGeometry`.
+- **Sub-object free-transform (manipulation scope).** A pinch on a hovered part now free-transforms *that part*, not the whole vehicle. Introduced a per-cursor **manipulation scope**: the transform a free-transform acts on — the whole target by default, the hovered sub-object when refined into one (the v0.1 "hovered sub-object = implicit scope" rule). `FreeGrabFreeTransform` now operates on a scope `Transform` and groups bimanual sessions by scope, so two hands on one part scale it while parts of one parent move independently. Parent stays the `ActiveTarget` (hover/visual/POI); only the manipulation retargets — minimal coupling.
+- **Tighter gaze box** computed from the child union instead of a hand-authored size.
+
+**Why.**
+- The constraint must keep the cursor on the *visible* geometry; for a composite with no dominant root, that geometry is the union of its parts. Scoped manipulation makes "gaze the car, refine to a wheel, move the wheel" actually manipulate the wheel — completing the sub-component v0.1 loop.
+
+**Headset feedback fixed (same day).**
+- The composite's parts now go **transparent/tinted** on hover/active so the cursor is visible *inside* them — feedback was previously applied only to the target's own renderer, which a composite parent lacks; generalized to all child renderers.
+- A pinch on a part now actually **free-transforms that part**. A sub-object candidate was being routed into the (no-op) deformation-edit path, so nothing moved *and* the edit path let the cursor crawl out of the body — one bug, two symptoms. A hovered sub-object now takes precedence and routes to free-transform.
+- The cursor now **rides the manipulated part** (re-derived from the grab point in the scope's frame), which also keeps the highlight locked to the grabbed part.
+
+**Next.**
+- Light snap-assist toward sub-objects + the **depth push-through membrane** for descend/ascend (slight help to enter a part, slight force to leave). Open design question logged: composite *parent semantics* — should one child be promoted to "primary," and by what heuristic?
+
+---
+
 ## 2026-06-22 — Geometry congruency fixes + sub-component selection (Steps A–B)
 
 **What.**
