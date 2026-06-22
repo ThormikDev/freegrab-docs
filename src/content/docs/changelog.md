@@ -9,6 +9,21 @@ Entries are reverse-chronological (newest first).
 
 ---
 
+## 2026-06-22 — Hierarchy descend/ascend: membrane + explicit lock gesture
+
+**What.**
+- **Scope model + pluggable transition seam.** A per-cursor **scope stack** with **strict re-bind** — descending confines the cursor to the child's geometry (the bound catches *within* the part) — plus an interactor seam (`DescendScope`/`AscendScope`) that mechanisms drive as decoupled observers.
+- **Two mechanisms, coexisting.** (1) *Soft membrane* — push the cursor *into* a part to descend, *out* to ascend (reuses the push-through pressure model). (2) *Explicit lock gesture* — a **secondary middle-finger pinch** descends *and gaze-locks* the cursor to its target so it holds context while the eyes explore the scene; pinch again with no deeper part to ascend/unlock. The membrane stands down while locked, so the two are complementary (soft/unlocked vs. explicit/locked); each is independently optional.
+- **Locked-state feedback** — the locked sub-object is outlined **purple** (vs. green hover), the legible signal that gaze is decoupled.
+
+**Why.**
+- "How do we enter and leave a sub-component" is the core nested-refinement question. Strict re-bind keeps the trust axiom at every level; the explicit lock adds a deliberate, gaze-independent working context — useful when the eyes must scan the environment while the hands keep operating on one object.
+
+**Next / known.**
+- Sub-object POI snapping makes the cursor flicker on composites (logged §7.4) — exclude `SubObject` candidates from the snap path. Lock should also work on leaf targets like the cube (decouple lock from descend). Tune + unify the 3D/2D membrane pressure model.
+
+---
+
 ## 2026-06-22 — Composite surface constraint + sub-object free-transform (Step C)
 
 **What.**
