@@ -9,6 +9,26 @@ Entries are reverse-chronological (newest first).
 
 ---
 
+## 2026-07-03 — The UI thrust: 2D/2.5D menus, the PowerPoint canvas, and the cursor core
+
+**What.**
+- **UI generalization on the selection contract (C1→C2→cascade).** A clean-rebuilt UGUI world-space UI layer speaking the candidate contract natively: buttons/toggles are `Widget/Area` (commit anywhere within — no centre-snapping), sliders are `Span/Segment` (refined cursor = absolute "mouse-click" set, coarse gaze+pinch = relative drag), panels are `Region`. Zero interactor changes — validating the "same machine across geometries" thesis. Then 2.5D: a **hard depth detent** (`FreeGrabUiLayerConstraint`) makes each layer flat 2D to refine while hand depth picks the layer, and a **dynamic cascading menu** walks real submenus by depth (push over a parent item to unfold, pull to collapse).
+- **The widget membrane, redesigned as a ratchet detent.** The cursor is *captured* by the active widget and one deliberate push past its edge steps exactly one widget in the pushed grid direction (fixed displacement, quantized axis, re-arm gate — no diagonals, no time-pressure, no skidding). Lesson recorded: *displacement detents for repeated stepping; time-pressure for deliberate boundary crossings.*
+- **The "PowerPoint canvas" demonstrator** — the full-pipeline showcase. Gaze pre-selects a shape and the refining cursor is **hard-clamped inside it**, so a ballistic throw at a corner cannot overshoot: centre = move, corner quadrants = resize, edge bands = stretch — handle glyphs are affordance only, no small targets exist. Wrist roll rotates; hand depth ratchets **z-order** while the overlap stack **fans out into real depth** (the slide un-flattens so you see the z you're reordering). A sustained-push **escape membrane** (strain shown as glow — walls stay positionally exact) pops the cursor onto the canvas; a **depth-layered color picker** (XY = hue/saturation, depth = brightness layer, deeper = darker) gives a continuous 3-DOF pick that 2-DOF input structurally cannot. A desktop-mimic condition (pinch = select, then acquire real small handles) is one switch away for the A/B.
+- **The quadrant depth-marking menu with pull-to-place.** A sustained **open palm** summons a full-slide layer of four huge quadrant tiles (Shape ▸ / Image ▸ / Clear / Grid); pushing into a quadrant unfolds the next full-slide layer — a marking menu whose stroke is in *depth*, with targets big enough for gaze alone. The signature move: **pinch a leaf item and pull it back through the layers** — the spawned shape rides the cursor, the menu dissolves behind it, release places it on the slide. Menu selection flows into coarse placement in one gesture.
+- **The cursor core, rebuilt from headset feedback.** (1) *Disengage policy*: a completed refined pinch is a task boundary — refinement returns to latent instantly at release (dwell as fallback); a locked cursor or open panel always suppresses it. (2) *Selection-grain gating*: coarse gaze+pinch commits only object-grain candidates (Widget/Span/Region/SubObject); mesh features are refined-only — a coarse pinch on a mesh is always a whole-object grab. (3) *Border-clutch + strain*: the cursor clamps like a mouse at the screen edge (reversal moves immediately, no travel debt) while the discarded push lives on as a **boundary-strain** channel feeding every membrane — *position is clutched; pressure is strain.* (4) A **flat strain-ring cursor** on planar targets that leans and stretches along the strain — the cursor itself is the pressure display.
+- **Principle recorded (recurring correction): the visual boundary IS the interaction boundary.** Overshoot slack is legitimate only where strain charges a transition (membrane pop, detent step) — never on a plain containment wall.
+
+**Why.**
+- The thrust's question is *where refinement adds value over gaze+pinch, which is already excellent at flat selection*. The answers that survived headset testing are structural, not positional: capture + hard walls turn corners into unmissable targets (edge pointing, recreated per-object by gaze); detents turn positioning into confident discrete steps; depth and wrist roll give the hand jobs 2-DOF input has no channel for; and pull-to-place collapses menu → placement into one movement. Coexistence held throughout: every coarse gaze+pinch path stays fully useful, refinement only adds.
+
+**Next.**
+- Single headset tuning session over the consolidated parameter backlog (engage/disengage, strain drain, escape, summon thresholds, layer depths, roll sign).
+- High-priority slide backlog: canvas-resize as the outermost scope; the **2D↔3D portal** (a slide shape as a live RenderTexture preview of a 3D object — depth-pull extracts it into the room, push-back flattens it; Moravian star first) as the demo-video centrepiece.
+- Extract the shared pressure/detent core (5+ membrane instances); docs-site "UI (2D/2.5D)" section with demonstrator clips.
+
+---
+
 ## 2026-06-22 — Hierarchy descend/ascend: membrane + explicit lock gesture
 
 **What.**
