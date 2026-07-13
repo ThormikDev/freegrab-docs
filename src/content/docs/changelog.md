@@ -9,7 +9,7 @@ Entries are reverse-chronological (newest first).
 
 ---
 
-## 2026-07-03 — Design space rebuilt as a research artifact
+## 2026-07-13 — Design space rebuilt as a research artifact
 
 **What.**
 - Replaced the previous design-space page with a structured section: **Overview** (the five-layer model: paradigm / technique / dimensions / contexts / applications, with evidence codes ✓●○✗), **The Pipeline** (the technique as a chronological state model, P0 latent → P9 disengage), **Dimensions (Table 1)** (the morphological space: ~27 dimensions with enumerated values, defaults, and the finding that decided each), **Value Matrix (Table 2)** (capability × context, with an explicit "can gaze+pinch do it?" verdict per row), **Novelty Ledger** (Core claims / Techniques-on-top / Engineering, with contested rows marked), and a **Parameters Appendix** (every knob, per dimension).
@@ -25,7 +25,7 @@ Entries are reverse-chronological (newest first).
 
 ---
 
-## 2026-07-03 — The UI thrust: 2D/2.5D menus, the PowerPoint canvas, and the cursor core
+## 2026-07-13 — The UI thrust: 2D/2.5D menus, the PowerPoint canvas, and the cursor core
 
 **What.**
 - **UI generalization on the selection contract (C1→C2→cascade).** A clean-rebuilt UGUI world-space UI layer speaking the candidate contract natively: buttons/toggles are `Widget/Area` (commit anywhere within — no centre-snapping), sliders are `Span/Segment` (refined cursor = absolute "mouse-click" set, coarse gaze+pinch = relative drag), panels are `Region`. Zero interactor changes — validating the "same machine across geometries" thesis. Then 2.5D: a **hard depth detent** (`FreeGrabUiLayerConstraint`) makes each layer flat 2D to refine while hand depth picks the layer, and a **dynamic cascading menu** walks real submenus by depth (push over a parent item to unfold, pull to collapse).

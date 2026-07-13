@@ -21,6 +21,7 @@ export default defineConfig({
 			],
 			sidebar: [
 				{ label: 'The Technique', slug: 'technique' },
+				{ label: 'How It Works', slug: 'how-it-works' },
 				{
 					label: 'Design Space',
 					items: [
