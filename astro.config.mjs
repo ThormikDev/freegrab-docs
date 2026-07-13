@@ -21,7 +21,17 @@ export default defineConfig({
 			],
 			sidebar: [
 				{ label: 'The Technique', slug: 'technique' },
-				{ label: 'Design Space', slug: 'design-space' },
+				{
+					label: 'Design Space',
+					items: [
+						{ label: 'Overview', slug: 'design-space' },
+						{ label: 'The Pipeline', slug: 'design-space/pipeline' },
+						{ label: 'Dimensions (Table 1)', slug: 'design-space/dimensions' },
+						{ label: 'Value Matrix (Table 2)', slug: 'design-space/value-matrix' },
+						{ label: 'Novelty Ledger', slug: 'design-space/novelty' },
+						{ label: 'Parameters Appendix', slug: 'design-space/parameters' },
+					],
+				},
 				{ label: 'Application Examples', slug: 'application-examples' },
 				{ label: 'Changelog', slug: 'changelog' },
 			],

@@ -1,0 +1,41 @@
+% Table 2 — Capability × context value matrix: what refinement adds over gaze+pinch.
+% Requires: \usepackage{booktabs, tabularx}
+% Contexts: C1 1D span · C2 2D widgets · C3 2D canvas · C4 2.5D layered · C5 3D surface · C6 3D hierarchy
+% Baseline column: "=" identical to gaze+pinch (coexistence control) · "S-no" structurally impossible for
+% 2-DOF gaze+pinch (analytic) · "poor" possible but below precision/fluency (empirical, to study) · "open" open question.
+
+\begin{table*}[t]
+  \caption{Capability $\times$ context value matrix. Every capability lists the mechanism (design-space
+  dimension) that provides it and whether plain gaze+pinch can do it: ``=''~identical (the coexistence
+  controls), ``S-no''~structurally impossible for a 2-DOF pointer (analytic claim), ``poor''~possible but
+  degraded, ``open''~an explicit study question. Evidence as in Table~\ref{tab:design-space}.}
+  \label{tab:value-matrix}
+  \small
+  \begin{tabularx}{\textwidth}{@{}Xllcc@{}}
+    \toprule
+    \textbf{Capability} & \textbf{Contexts} & \textbf{Mechanism} & \textbf{G+P?} & \textbf{Ev.} \\
+    \midrule
+    Acquire \& activate a large target            & C1--C6 & gaze proxy + coarse pinch (D0.1, D7.1) & = & \cmark \\
+    Grab \& move a whole object                   & C3, C5, C6 & coarse pinch = grab (D0.2, D7.2)   & = & \cmark \\
+    \addlinespace
+    Select below gaze accuracy                    & C2, C5, C6 & refined cursor + snap (D2.1, D6.2) & no & \cmark \\
+    Absolute value set at a point                 & C1 & refined commit = absolute (D7.2)           & poor & \cmark \\
+    Discrete sibling stepping                     & C2 & ratchet detent (D5.1)                      & open & \bmark \\
+    Resize without handle acquisition             & C3 & capture + hard wall + regions (D5.1, D6.3) & no & \bmark \\
+    Deliberate scope enter/escape                 & C3, C6 & asymmetric membrane (D5.1, D5.3)       & S-no & \cmark/\bmark \\
+    Gaze-decoupled work                           & C2, C3, C5, C6 & lock (D8.1)                    & S-no & \cmark \\
+    \addlinespace
+    Layer picking in stacked content              & C4 & depth detent (D5.1)                        & S-no & \cmark \\
+    Cascading menus walked in depth               & C4 & descend-over-item (D8.3)                   & S-no & \cmark \\
+    Z-order reordering with visible stack         & C3, C4 & depth ratchet + exploded view (D7.3)   & S-no & \bmark \\
+    Continuous 3-DOF pick (colour)                & C3, C4 & XY on layer + depth (D7.3, D8.3)       & S-no & \bmark \\
+    Widget-free rotation                          & C3 & wrist roll in hold (D7.3)                  & S-no & \bmark \\
+    Menu selection $\to$ placement in one gesture & C3, C4 & pull-to-place (D8.3 + D7.2)            & no & \bmark \\
+    Summon a panel at the working locus           & C3 & open palm / depth press (D8.2)             & poor & \bmark \\
+    Access content behind the surface             & C3, C4 & depth press through plane (D8.2)       & S-no & \bmark \\
+    \addlinespace
+    Direct mesh-feature deformation               & C5 & refined cursor + feature snap (D6.2, D7.2) & no & \cmark \\
+    Bimanual part scale/stretch                   & C6 & two cursors, one scope (D7.4)              & open & \cmark \\
+    \bottomrule
+  \end{tabularx}
+\end{table*}

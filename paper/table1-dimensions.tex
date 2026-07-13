@@ -1,0 +1,71 @@
+% Table 1 — The FreeGrab design space: dimensions × enumerated values, grouped by pipeline phase.
+% Requires: \usepackage{booktabs, tabularx, amssymb}
+% Evidence codes: \cmark validated (expert first-use, N=1) · \bmark built · \omark conceived · \xmark rejected (with finding)
+% Suggested macros:
+%   \newcommand{\cmark}{\ding{51}} % or $\checkmark$
+%   \newcommand{\bmark}{$\bullet$}
+%   \newcommand{\omark}{$\circ$}
+%   \newcommand{\xmark}{$\times$}
+%   \newcommand{\dft}[1]{\textbf{#1}} % default value
+
+\begin{table*}[t]
+  \caption{The FreeGrab design space: dimensions grouped by pipeline phase, each with its enumerated
+  values. Defaults in bold. Evidence: \cmark~headset-validated, \bmark~built, \omark~conceived,
+  \xmark~implemented and rejected with a recorded finding.}
+  \label{tab:design-space}
+  \small
+  \begin{tabularx}{\textwidth}{@{}llX@{}}
+    \toprule
+    \textbf{Phase} & \textbf{Dimension} & \textbf{Values} \\
+    \midrule
+    P0 Latent
+      & D0.1 Latent cursor existence & none (classic gaze+pinch) \cmark\ · \dft{gaze-proxy, invisible} \cmark\ · always-visible \cmark \\
+      & D0.2 Coarse-commit grain & everything \xmark\ · \dft{object-grain only} \bmark\ · grab-only \omark \\
+    \addlinespace
+    P1 Pre-selection
+      & D1.1 Acquisition timing & live sample · \dft{gaze lookback at pinch onset} \cmark \\
+      & D1.2 Feedback & none · \dft{outline on gazed element} \cmark \\
+      & D1.3 Overlap disambiguation & nearest centre \xmark\ · \dft{topmost drawn} \bmark \\
+    \addlinespace
+    P2 Engagement
+      & D2.1 Refinement trigger & speed threshold \xmark\ · \dft{intentful displacement from home} \cmark\ · gesture \omark\ · dwell \omark\ · always-on \cmark \\
+      & D2.2 Post-commit re-arm & immediate \omark\ · \dft{settle once} \bmark \\
+    \addlinespace
+    P3 Instantiation
+      & D3.1 Placement locus & last position \xmark\ · \dft{gaze hit} \cmark\ · geometry centre \omark\ · comfort home \omark \\
+      & D3.2 Representation & \dft{sphere (volumetric)} \cmark\ · \dft{flat strain-ring (planar)} \bmark\ · articulated hand \cmark\ · sphere+ghost \cmark \\
+      & D3.3 Surface-style source & auto-detect \omark\ · \dft{target-declared} \bmark \\
+    \addlinespace
+    P4 Motion
+      & D4.1 CD gain & 1:1 \cmark\ · \dft{visual-angle} \cmark\ · fixed 0.5/2.0 \cmark \\
+      & D4.2 Border mapping & absolute offset \xmark\ · \dft{border-clutch + strain channel} \bmark \\
+      & D4.3 Filtering & \dft{none} · 1\texteuro\ filter \omark \\
+    \addlinespace
+    P5 Containment
+      & D5.1 Boundary profile & rubber-band wall \xmark\ · \dft{hard wall} \cmark\ · pressure membrane \bmark\ · displacement detent \bmark\ · hysteresis detent \cmark \\
+      & D5.2 Scope structure & \dft{flat} \cmark\ · hierarchy stack \cmark\ · capture-scope (2D) \bmark \\
+      & D5.3 Scope transition & soft membrane \cmark\ · explicit lock \cmark\ · relax + re-gaze \bmark \\
+      & D5.4 Strain display & none \xmark\ · \dft{glyph glow} \bmark\ · \dft{cursor lean/stretch} \bmark \\
+    \addlinespace
+    P6 Resolution
+      & D6.1 Selection vocabulary & mesh-only kinds \xmark\ · \dft{kind $\times$ geometry contract} \cmark \\
+      & D6.2 Snapping & always-magnetize \xmark\ · \dft{motion-guided intent} \cmark\ · none \cmark \\
+      & D6.3 Region partition & none · \dft{centre/corner/edge regions, glyphs as affordance} \bmark \\
+    \addlinespace
+    P7 Commit
+      & D7.1 Trigger & \dft{pinch} \cmark\ · dwell \omark\ · depth push-through \omark \\
+      & D7.2 Semantics & \dft{content-defined (commit-as-strategy)} \cmark: refined=absolute vs coarse=relative \cmark; region$\times$refinement \bmark \\
+      & D7.3 Extra DOF in hold & none · \dft{depth$\to$z-order} \bmark\ · \dft{wrist roll$\to$rotate} \bmark\ · depth$\to$descend \cmark \\
+      & D7.4 Hands & \dft{unimanual} \cmark\ · bimanual 3D \cmark\ · bimanual 2D \omark\ (open subspace) \\
+    \addlinespace
+    P8 Sustained
+      & D8.1 Lock & none · \dft{whole-target / scope lock} \cmark \\
+      & D8.2 Panel summon & depth press-release \bmark\ · open palm \bmark\ · \dft{both} \bmark\ · empty-canvas press \xmark \\
+      & D8.3 Panel navigation & layer detent \cmark\ · cascade descend \cmark\ · \dft{quadrant depth-marking} \bmark \\
+    \addlinespace
+    P9 Disengage
+      & D9.1 Policy & any-stillness \xmark\ · dwell \cmark\ · pinch-boundary \bmark\ · \dft{hybrid} \bmark\ · gaze-saccade \omark \\
+      & D9.2 Suppression & none \xmark\ · \dft{lock + open-panel holds} \bmark \\
+    \bottomrule
+  \end{tabularx}
+\end{table*}

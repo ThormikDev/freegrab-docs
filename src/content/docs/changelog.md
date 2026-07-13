@@ -9,6 +9,22 @@ Entries are reverse-chronological (newest first).
 
 ---
 
+## 2026-07-03 — Design space rebuilt as a research artifact
+
+**What.**
+- Replaced the previous design-space page with a structured section: **Overview** (the five-layer model: paradigm / technique / dimensions / contexts / applications, with evidence codes ✓●○✗), **The Pipeline** (the technique as a chronological state model, P0 latent → P9 disengage), **Dimensions (Table 1)** (the morphological space: ~27 dimensions with enumerated values, defaults, and the finding that decided each), **Value Matrix (Table 2)** (capability × context, with an explicit "can gaze+pinch do it?" verdict per row), **Novelty Ledger** (Core claims / Techniques-on-top / Engineering, with contested rows marked), and a **Parameters Appendix** (every knob, per dimension).
+- Paper-ready LaTeX (booktabs) versions of both tables added under `paper/`.
+- A self-contained **interactive explorer** (pipeline rail, evidence filtering, matrix, ledger) built alongside for presentations.
+
+**Why.**
+- The previous page mixed paradigm, dimensions, contexts, and applications in one table and had drifted far behind the implementation. The restructure separates what the technique *is* (dimensions, surveyed once) from what it is *worth* (contexts, assessed per capability) and what we may *claim* (the ledger) — the shape a CHI/UIST reader expects, and the shape a study plan falls out of.
+
+**Next.**
+- Researcher reviews the drafted evidence codes and the novelty ledger (three contested rows).
+- Demonstrator clips per Table 2 row for the Application Examples gallery.
+
+---
+
 ## 2026-07-03 — The UI thrust: 2D/2.5D menus, the PowerPoint canvas, and the cursor core
 
 **What.**
