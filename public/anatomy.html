@@ -1,0 +1,445 @@
+<title>FreeGrab — Anatomy of the Technique</title>
+<style>
+  :root {
+    --paper:#FAFAF7; --ink:#1C2230; --soft:#4A5468; --line:#E2E0D8; --card:#FFFFFF;
+    --accent:#0F6B66; --accent-bg:#E3EFEA;
+    --new:#0F6B66; --old:#8B93A5;
+    --ex:#2E7D4F; --ex-bg:#E7F2EA; --bu:#B0731F; --bu-bg:#F7EEDD; --un:#5B6B85; --un-bg:#EAEDF3;
+  }
+  @media (prefers-color-scheme: dark) { :root {
+    --paper:#141922; --ink:#E8EAF0; --soft:#9AA5B8; --line:#2A3242; --card:#1B2230;
+    --accent:#3AA69E; --accent-bg:#12332F; --new:#3AA69E; --old:#5C6578;
+    --ex:#5FBF85; --ex-bg:#16301F; --bu:#D9A050; --bu-bg:#33270F; --un:#8C9CB8; --un-bg:#222B3B;
+  }}
+  :root[data-theme="dark"] {
+    --paper:#141922; --ink:#E8EAF0; --soft:#9AA5B8; --line:#2A3242; --card:#1B2230;
+    --accent:#3AA69E; --accent-bg:#12332F; --new:#3AA69E; --old:#5C6578;
+    --ex:#5FBF85; --ex-bg:#16301F; --bu:#D9A050; --bu-bg:#33270F; --un:#8C9CB8; --un-bg:#222B3B;
+  }
+  :root[data-theme="light"] {
+    --paper:#FAFAF7; --ink:#1C2230; --soft:#4A5468; --line:#E2E0D8; --card:#FFFFFF;
+    --accent:#0F6B66; --accent-bg:#E3EFEA; --new:#0F6B66; --old:#8B93A5;
+    --ex:#2E7D4F; --ex-bg:#E7F2EA; --bu:#B0731F; --bu-bg:#F7EEDD; --un:#5B6B85; --un-bg:#EAEDF3;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:960px; margin:0 auto; padding:34px 26px 90px; }
+  h1 { font-family:"Iowan Old Style",Palatino,Georgia,serif; font-size:28px; font-weight:600; margin:0 0 6px; text-wrap:balance; }
+  h1 em { color:var(--accent); font-style:normal; }
+  .lede { color:var(--soft); max-width:68ch; margin:0 0 8px; }
+  .thesis { background:var(--accent-bg); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius:10px; padding:12px 16px; max-width:76ch; margin:16px 0 6px; font-size:14.5px; }
+  h2 { font-family:"Iowan Old Style",Palatino,Georgia,serif; font-size:20px; font-weight:600; margin:38px 0 6px; }
+  .h2sub { color:var(--soft); font-size:13.5px; margin:0 0 14px; max-width:74ch; }
+  .legend { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 0; font-size:12px; }
+  .mark { padding:2px 9px; border-radius:999px; border:1px solid; }
+  .mark.ex { color:var(--ex); background:var(--ex-bg); border-color:var(--ex); }
+  .mark.bu { color:var(--bu); background:var(--bu-bg); border-color:var(--bu); }
+  .mark.un { color:var(--un); background:var(--un-bg); border-color:var(--un); }
+
+  .graph-wrap { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 6px 2px; overflow-x:auto; }
+  svg text { font:600 13px system-ui,sans-serif; fill:var(--ink); }
+  svg .edge-label { font:500 10.5px system-ui,sans-serif; fill:var(--soft); }
+  svg .edge-label.newe { fill:var(--new); font-weight:650; }
+  .node rect { fill:var(--paper); stroke:var(--line); stroke-width:1.5; rx:10; }
+  .node.cursor rect { stroke:var(--accent); stroke-width:2.5; fill:var(--accent-bg); }
+  .node { cursor:pointer; }
+  .node.dim { opacity:0.35; }
+  path.edge { fill:none; stroke:var(--old); stroke-width:1.6; }
+  path.edge.newe { stroke:var(--new); stroke-width:2.2; }
+  path.edge.dim { opacity:0.18; }
+  .modchip rect { fill:var(--un-bg); stroke:var(--un); stroke-width:1; rx:8; }
+  .modchip text { font:500 10.5px system-ui,sans-serif; fill:var(--un); }
+  .graph-note { font-size:12.5px; color:var(--soft); padding:8px 12px 10px; }
+  .graph-note b { color:var(--accent); }
+
+  .edge-sec { margin-bottom:14px; }
+  .edge-head { display:flex; gap:10px; align-items:baseline; flex-wrap:wrap; margin:22px 0 4px; }
+  .edge-head .rel { font-family:ui-monospace,Consolas,monospace; font-size:12.5px; color:var(--accent);
+    background:var(--accent-bg); padding:2px 10px; border-radius:999px; }
+  .edge-head .rel.olde { color:var(--soft); background:var(--paper); border:1px solid var(--line); }
+  .edge-head h3 { margin:0; font-size:16px; font-weight:650; }
+  .edge-blurb { color:var(--soft); font-size:13.5px; margin:0 0 10px; max-width:76ch; }
+  details.q { border:1px solid var(--line); border-radius:10px; background:var(--card); margin-bottom:8px; }
+  details.q summary { cursor:pointer; list-style:none; padding:11px 15px; display:flex; gap:10px; align-items:baseline; }
+  details.q summary::-webkit-details-marker { display:none; }
+  details.q summary:hover { background:var(--accent-bg); border-radius:10px; }
+  details.q summary .qm { color:var(--accent); font-weight:700; }
+  details.q summary .qt { font-weight:650; }
+  details.q summary .qn { color:var(--soft); font-size:12px; margin-left:auto; white-space:nowrap; }
+  .answers { padding:2px 15px 13px; display:grid; gap:8px; }
+  .ans { border:1px solid var(--line); border-radius:9px; padding:10px 13px; background:var(--paper); }
+  .ans-head { display:flex; gap:9px; align-items:baseline; flex-wrap:wrap; }
+  .ans-head .nm { font-weight:650; font-size:14px; }
+  .ans-head .st { font-size:11px; padding:1px 8px; border-radius:999px; border:1px solid; white-space:nowrap; }
+  .ans.ex .st { color:var(--ex); background:var(--ex-bg); border-color:var(--ex); }
+  .ans.bu .st { color:var(--bu); background:var(--bu-bg); border-color:var(--bu); }
+  .ans.un .st { color:var(--un); background:var(--un-bg); border-color:var(--un); }
+  .ans.pick { box-shadow: inset 0 0 0 1.5px var(--accent); }
+  .ans-head .picktag { font-size:11px; color:var(--accent); font-weight:650; }
+  .tw { display:grid; grid-template-columns:1fr 1fr; gap:2px 18px; margin-top:7px; font-size:12.8px; }
+  .tw .plus  { color:var(--ex); }
+  .tw .minus { color:var(--bu); }
+  .tw div b { font-weight:650; }
+  .meta { margin-top:7px; font-size:12px; color:var(--soft); }
+  .meta code { font-family:ui-monospace,Consolas,monospace; font-size:11px; background:var(--un-bg); padding:1px 5px; border-radius:5px; }
+  @media (max-width:620px) { .tw { grid-template-columns:1fr; } }
+
+  .traits { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:10px; }
+  .trait { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 15px; }
+  .trait .tn { font-weight:650; }
+  .trait .tp { color:var(--soft); font-size:13px; margin-top:4px; }
+  .trait .tr { margin-top:8px; font-size:12.8px; }
+  .trait .tr b { color:var(--accent); }
+  footer { margin-top:44px; color:var(--soft); font-size:12.5px; border-top:1px solid var(--line); padding-top:14px; max-width:76ch; }
+</style>
+
+<main>
+  <h1>FreeGrab — <em>Anatomy of the Technique</em></h1>
+  <p class="lede">The interaction decomposed into its functional parts and the relations between them. Every relation raises simple design questions; every answer is a legitimate point in the design space with its own tradeoffs — including answers we have not built.</p>
+
+  <div class="thesis"><b>The argument in one sentence:</b> gaze+pinch is a three-part interaction — <i>gaze selects a target, the hand confirms</i>. FreeGrab adds one new part, the <b>cursor</b> — and every capability the technique gains is literally one of the new part's relations. Target <i>traits</i> (dimensionality, internal structure, multiplicity) don't change the relations; they re-parameterize them.</div>
+
+  <h2>The interaction graph</h2>
+  <p class="h2sub">Grey relations exist in plain gaze+pinch. <b style="color:var(--accent)">Teal relations exist only because the cursor does.</b> Click a node to highlight its relations; the questions for each relation are listed below.</p>
+
+  <div class="graph-wrap">
+    <svg viewBox="0 0 900 360" width="100%" role="img" aria-label="Interaction graph: gaze, hand, cursor, target and their relations">
+      <defs>
+        <marker id="arr-old" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--old)"></path>
+        </marker>
+        <marker id="arr-new" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--new)"></path>
+        </marker>
+      </defs>
+      <!-- edges -->
+      <path class="edge" data-n="gaze target" d="M 165 82 C 360 22, 580 22, 745 82" marker-end="url(#arr-old)"></path>
+      <text class="edge-label" x="455" y="32" text-anchor="middle">selects · pre-highlights</text>
+      <path class="edge" data-n="hand target" d="M 165 292 C 360 345, 580 345, 745 292" marker-end="url(#arr-old)"></path>
+      <text class="edge-label" x="455" y="342" text-anchor="middle">acts directly (pinch = whole-target action)</text>
+      <path class="edge newe" data-n="gaze cursor" d="M 168 100 C 260 130, 330 155, 398 172" marker-end="url(#arr-new)"></path>
+      <text class="edge-label newe" x="255" y="124" text-anchor="middle">places</text>
+      <path class="edge newe" data-n="hand cursor" d="M 168 272 C 260 244, 330 218, 398 200" marker-end="url(#arr-new)"></path>
+      <text class="edge-label newe" x="248" y="253" text-anchor="middle">summons · steers · retires</text>
+      <path class="edge newe" data-n="cursor target" d="M 520 176 C 600 160, 660 150, 738 140" marker-end="url(#arr-new)"></path>
+      <text class="edge-label newe" x="628" y="145" text-anchor="middle">points within · acts precisely</text>
+      <path class="edge newe" data-n="target cursor" d="M 738 220 C 660 232, 600 220, 522 202" marker-end="url(#arr-new)"></path>
+      <text class="edge-label newe" x="630" y="238" text-anchor="middle">bounds · captures · shapes</text>
+      <!-- nodes -->
+      <g class="node" data-n="gaze"><rect x="65" y="58" width="105" height="46"></rect><text x="117" y="86" text-anchor="middle">GAZE</text></g>
+      <g class="node" data-n="hand"><rect x="65" y="252" width="105" height="46"></rect><text x="117" y="280" text-anchor="middle">HAND</text></g>
+      <g class="node cursor" data-n="cursor"><rect x="398" y="160" width="122" height="52"></rect><text x="459" y="191" text-anchor="middle">CURSOR</text></g>
+      <g class="node" data-n="target"><rect x="738" y="115" width="112" height="130"></rect><text x="794" y="150" text-anchor="middle">TARGET</text></g>
+      <!-- trait chips on target -->
+      <g class="modchip"><rect x="748" y="168" width="92" height="20"></rect><text x="794" y="182" text-anchor="middle">dimensionality</text></g>
+      <g class="modchip"><rect x="748" y="192" width="92" height="20"></rect><text x="794" y="206" text-anchor="middle">inner structure</text></g>
+      <g class="modchip"><rect x="748" y="216" width="92" height="20"></rect><text x="794" y="230" text-anchor="middle">multiplicity</text></g>
+      <!-- hand modifier -->
+      <g class="modchip"><rect x="72" y="302" width="92" height="20"></rect><text x="118" y="316" text-anchor="middle">one or two?</text></g>
+    </svg>
+    <div class="graph-note"><b>Why the cursor node matters:</b> a new node brings all of its edges. The four teal relations are the technique's entire capability surface — nothing else was added, and the two grey relations are untouched (that is the coexistence guarantee).</div>
+  </div>
+
+  <div class="legend">
+    <span class="mark ex">✓ explored in headset</span>
+    <span class="mark bu">● built, not yet headset-tested</span>
+    <span class="mark un">○ unexplored — hypothesized tradeoffs</span>
+    <span style="color:var(--soft); align-self:center;">outlined = current pick for the demonstrators (a pick, not a verdict)</span>
+  </div>
+
+  <h2>The relations, question by question</h2>
+  <p class="h2sub">Each relation unfolds into design questions. Every answer lists strengths and weaknesses — there are no rejected answers, only tradeoffs; some answers simply have first-hand evidence attached.</p>
+  <div id="edges"></div>
+
+  <h2>Target traits — the modifiers</h2>
+  <p class="h2sub">The answer to "do the parts interact differently on different targets?" is <b>no</b> — the relations are identical; traits re-parameterize them in three regular ways.</p>
+  <div class="traits" id="traits"></div>
+
+  <footer>
+    Scope: this prototype covers the unimanual, single-simple-target core; the trait cards point to where hierarchy, multiplicity, and bimanual answers attach. Everything on this page is drafted for the researcher's review — edit the <code>DATA</code> block at the top of this file to adjust any claim, wording, or tradeoff.
+  </footer>
+</main>
+
+<script>
+/* ================================================================
+   EDIT HERE — all page content lives in this DATA object.
+   Plain text only; keep quotes and commas intact.
+   status: "ex" = explored in headset · "bu" = built · "un" = unexplored
+   pick: true marks the current demonstrator default (not a verdict).
+   ================================================================ */
+const DATA = {
+  edges: [
+    {
+      rel: "GAZE → TARGET", isNew: false, title: "Looking chooses",
+      blurb: "The familiar half: the eyes reach anything in view in a fraction of a second. FreeGrab leaves this relation untouched — whatever you look at highlights, exactly as in gaze+pinch.",
+      questions: [
+        { q: "Which moment of looking counts when the fingers commit?",
+          answers: [
+            { name: "A split-second earlier than the pinch", status: "ex", pick: true,
+              plus: "Matches natural eye–hand timing; rescues commits after the eyes moved on",
+              minus: "Needs a short gaze history buffer",
+              params: "lookback window (ms)", seen: "all demos" },
+            { name: "The exact pinch moment", status: "ex",
+              plus: "Trivially simple; no history needed",
+              minus: "Misses surprisingly often — the eyes leave before the fingers close",
+              params: "—", seen: "early prototypes" },
+          ]},
+      ],
+    },
+    {
+      rel: "HAND → TARGET", isNew: false, title: "Acting directly (the quick path)",
+      blurb: "The other familiar half: a pinch acts on whatever is looked at. FreeGrab's ground rule is that this path never changes — it must work exactly as if FreeGrab were not installed.",
+      questions: [
+        { q: "How fine an action may a direct (no-cursor) pinch perform?",
+          answers: [
+            { name: "Whole-target actions only", status: "bu", pick: true,
+              plus: "Never surprises: a glance-pinch clicks or grabs, it cannot edit a detail the eyes couldn't resolve",
+              minus: "One extra rule to learn ('details need the cursor')",
+              params: "which action grains count as whole-target", seen: "slide demo, mesh demo" },
+            { name: "Anything under the gaze point", status: "ex",
+              plus: "No rule; maximum reach for the quick path",
+              minus: "Gaze imprecision leaks into precise actions — e.g. deforming a surface when the user meant to grab it",
+              params: "—", seen: "earlier mesh demo (observed tradeoff)" },
+            { name: "Nothing — cursor required for all actions", status: "un",
+              plus: "One consistent pathway; trivial to explain",
+              minus: "Throws away the speed of the quick path entirely",
+              params: "—", seen: "—" },
+          ]},
+      ],
+    },
+    {
+      rel: "GAZE → CURSOR", isNew: true, title: "The eyes position the cursor",
+      blurb: "The relation that makes the cursor cheap: the eyes have already travelled, so the cursor can appear exactly where the work is.",
+      questions: [
+        { q: "Where does the cursor appear?",
+          answers: [
+            { name: "At the current gaze point", status: "ex", pick: true,
+              plus: "Zero travel; the hand only does the last centimetres",
+              minus: "Inherits gaze error at the instant of summoning",
+              params: "re-anchoring while dormant", seen: "all demos" },
+            { name: "Where the cursor last was", status: "ex",
+              plus: "Continuity for repeated work in one spot",
+              minus: "After a few actions the cursor strands somewhere awkward — arms end up crossed",
+              params: "—", seen: "early prototypes (observed tradeoff)" },
+            { name: "At the target's centre", status: "un",
+              plus: "Predictable; independent of gaze noise",
+              minus: "Ignores where on the target you meant to work",
+              params: "—", seen: "—" },
+        ]},
+        { q: "Could the eyes keep steering the cursor after it appears?",
+          answers: [
+            { name: "No — hand-only once placed", status: "ex", pick: true,
+              plus: "The eyes stay free to inspect; no jitter enters the pointing",
+              minus: "Large repositions need the hand (or a re-summon)",
+              params: "—", seen: "all demos" },
+            { name: "Gaze warps, hand refines (MAGIC-style)", status: "un",
+              plus: "Fast large jumps plus fine control; established in desktop literature",
+              minus: "Warps can be startling; needs careful hand-off rules",
+              params: "warp threshold, hand-off hysteresis", seen: "—" },
+        ]},
+      ],
+    },
+    {
+      rel: "HAND → CURSOR", isNew: true, title: "The hand owns the cursor",
+      blurb: "Three sub-relations: bringing it into being, moving it, and letting it go. This is where the mouse's virtues are grafted in.",
+      questions: [
+        { q: "How is the cursor summoned?",
+          answers: [
+            { name: "A deliberate hand movement", status: "ex", pick: true,
+              plus: "No gesture to learn, no device; intent and beginning-to-point are the same act",
+              minus: "Midas-adjacent: energetic gesturing can summon it unintentionally; threshold needs tuning per person",
+              params: "reach distance, tremor floor", seen: "all demos" },
+            { name: "Hand speed above a threshold", status: "ex",
+              plus: "Very responsive to fast reaches",
+              minus: "Precise aiming is slow — the cursor dropped out mid-aim",
+              params: "speed threshold", seen: "early prototypes (observed tradeoff)" },
+            { name: "A pinch on the non-dominant hand", status: "un",
+              plus: "Solves the Midas problem completely — summoning is unambiguous",
+              minus: "Occupies the second hand; may need extra sensing (e.g. an EMG wristband) to stay eyes-free and low-effort",
+              params: "gesture choice, sensing modality", seen: "—" },
+            { name: "A hand posture (e.g. open palm)", status: "bu",
+              plus: "A posture, not a motion — cannot be confused with reaching or pinching",
+              minus: "Requires reliable finger tracking; postures fatigue if held",
+              params: "posture definition, hold time", seen: "slide demo (panel summon)" },
+            { name: "Dwell (hover the hand still)", status: "un",
+              plus: "No motion or gesture at all",
+              minus: "Waiting is the cost; conflicts with 'rest means done'",
+              params: "dwell time", seen: "—" },
+            { name: "Always on (classic cursor)", status: "ex",
+              plus: "Nothing to summon; simplest possible model",
+              minus: "The cursor sits between every glance and every quick pinch — the fast path suffers",
+              params: "—", seen: "original FreeGrab" },
+        ]},
+        { q: "How does the hand steer it?",
+          answers: [
+            { name: "Position-mapped, scaled to how big the target looks", status: "ex", pick: true,
+              plus: "The same wrist motion works on a near whiteboard and a far panel; precision from gearing down",
+              minus: "Gearing means the cursor and hand drift apart spatially",
+              params: "control-display gain, per-mode gains", seen: "all demos" },
+            { name: "One-to-one with the hand", status: "ex",
+              plus: "Most direct mapping; nothing to explain",
+              minus: "Precision limited to raw hand steadiness",
+              params: "—", seen: "available as a setting" },
+            { name: "Rate control (hand offset = cursor velocity)", status: "un",
+              plus: "Unlimited range from a tiny hand workspace",
+              minus: "Notoriously poor for fine pointing; adds a control loop humans must learn",
+              params: "gain curve, dead zone", seen: "—" },
+        ]},
+        { q: "How does the cursor retire?",
+          answers: [
+            { name: "The moment a pinch completes (plus a resting fallback)", status: "bu", pick: true,
+              plus: "Finishing is a natural full stop; the next glance starts clean",
+              minus: "Rapid successive edits at one spot must re-summon (mitigated by the resting fallback)",
+              params: "policy switch, rest time", seen: "slide demo" },
+            { name: "Only after the hand rests", status: "ex",
+              plus: "Survives pauses mid-work",
+              minus: "After a completed action the user waits for the cursor to leave",
+              params: "rest time", seen: "menu demos (observed tradeoff)" },
+            { name: "When the eyes leave for a new target", status: "un",
+              plus: "Matches attention: looking away usually means done here",
+              minus: "Punishes glancing at a reference mid-edit — unless combined with pinning",
+              params: "saccade detection", seen: "—" },
+        ]},
+      ],
+    },
+    {
+      rel: "CURSOR → TARGET", isNew: true, title: "The cursor acts precisely",
+      blurb: "With a cursor present, the same pinch means something sharper: not 'the whole thing' but 'exactly this'. What 'this' is belongs to the content.",
+      questions: [
+        { q: "What does a cursor pinch mean?",
+          answers: [
+            { name: "Depends on where the cursor is — the content decides", status: "ex", pick: true,
+              plus: "One gesture, many meanings, all predictable from position — exactly the mouse contract (click a slider's track = set that value; grab a shape's corner = resize)",
+              minus: "Content must define its own responses; needs clear hover feedback",
+              params: "per-content commit definitions", seen: "slider, buttons, slide shapes" },
+            { name: "A fixed action regardless of position", status: "un",
+              plus: "Uniform and simple",
+              minus: "Discards the very precision the cursor bought",
+              params: "—", seen: "—" },
+        ]},
+        { q: "How is the element under the cursor chosen?",
+          answers: [
+            { name: "Nearest element, with motion-aware stickiness", status: "ex", pick: true,
+              plus: "Forgives small error; fast motion breaks free so stickiness never traps",
+              minus: "Stickiness is one more tuned behaviour",
+              params: "snap thresholds, intent gating", seen: "mesh features, widgets" },
+            { name: "Raw position only", status: "ex",
+              plus: "Fully literal",
+              minus: "Tiny elements demand raw steadiness",
+              params: "—", seen: "available as a setting" },
+            { name: "Whole zones instead of small handles", status: "bu",
+              plus: "With bounded edges, zones at corners become impossible to miss — small targets stop existing",
+              minus: "Zones must be learned (light visual hints help)",
+              params: "zone layout", seen: "slide shapes (corner = resize)" },
+        ]},
+      ],
+    },
+    {
+      rel: "TARGET → CURSOR", isNew: true, title: "The target shapes the cursor",
+      blurb: "The reversed relation is FreeGrab's most distinctive idea: the target is not just acted upon — it bounds, catches, and styles the cursor. The object is the cursor's screen.",
+      questions: [
+        { q: "What happens at the target's edge?",
+          answers: [
+            { name: "A screen edge: motion past it is discarded, reversal responds instantly", status: "bu", pick: true,
+              plus: "Fling toward a corner and it lands in the corner, guaranteed; no overshoot debt to unwind",
+              minus: "Leaving the target needs its own move (look elsewhere, or push through deliberately)",
+              params: "reversal dead-band", seen: "slide shapes" },
+            { name: "The cursor drifts a little past the edge", status: "ex",
+              plus: "Feels elastic and forgiving",
+              minus: "Even slight slack broke the corner guarantee — and with it the user's confidence",
+              params: "slack distance", seen: "earlier slide demo (observed tradeoff)" },
+            { name: "No bound at all (free-space cursor)", status: "un",
+              plus: "Maximum freedom",
+              minus: "Gives up the edge-pointing advantage entirely; the cursor floats off into nothing",
+              params: "—", seen: "—" },
+        ]},
+        { q: "Is pressing against the edge meaningful?",
+          answers: [
+            { name: "Yes — pressure is a signal, shown as lean and glow", status: "bu", pick: true,
+              plus: "One channel that later opens push-through, stepping to a neighbour, and depth pressing — without moving the cursor past the boundary",
+              minus: "Another feedback element to design well",
+              params: "pressure build/decay rates", seen: "slide shapes" },
+            { name: "No — the edge is inert", status: "ex",
+              plus: "Simplest possible edge",
+              minus: "Pressing feels dead; users reported not seeing what was happening",
+              params: "—", seen: "earlier slide demo (observed tradeoff)" },
+        ]},
+        { q: "What form does the cursor take on the target?",
+          answers: [
+            { name: "Matched to the surface: flat ring on flat things, small ball on 3D", status: "bu", pick: true,
+              plus: "Familiar pointer language; the ring doubles as the pressure display",
+              minus: "Needs the target to declare (or the system to infer) its surface kind",
+              params: "ring/ball sizes, lean gain", seen: "slide + mesh demos" },
+            { name: "One fixed shape everywhere", status: "ex",
+              plus: "Uniform",
+              minus: "A ball reads poorly on flat panels — users saw '3D cursor on 2D UI' as wrong",
+              params: "—", seen: "earlier demos (observed tradeoff)" },
+        ]},
+      ],
+    },
+  ],
+  traits: [
+    { name: "Dimensionality (1D · 2D · 2.5D · 3D)",
+      what: "How many axes of hand motion the steering relation consumes.",
+      rule: "Unconsumed motion becomes meaning. On a 2D panel, depth is surplus — it can pick layers, walk menu levels, reorder stacking, or summon panels. On a 1D slider, two axes are surplus. On a 3D surface, nothing is left over — and nothing extra is needed." },
+    { name: "Internal structure (parts, layers)",
+      what: "Whether the bounding relation nests.",
+      rule: "One fence — or fences within fences: the cursor can enter a part and be bounded by it, with deliberate crossings (push-through) and an explicit pin to stay. The later 'objects with parts' chapter is exactly this trait unfolded." },
+    { name: "Multiplicity (siblings, grids)",
+      what: "Whether the pointing relation has competition.",
+      rule: "With many small neighbours, the cursor can be caught by the current one and step discretely to the next — pointing becomes stepping. Whether stepping beats re-glancing is an open, studyable question." },
+    { name: "Hand plurality (one · two)",
+      what: "A modifier on the HAND node, not a new diagram.",
+      rule: "Each hand can own a cursor; or the hands split roles (one summons and pins, one steers). Marked as the open subspace — the graph and questions are identical, instantiated twice." },
+  ],
+};
+
+/* ---------- render (no need to edit below) ---------- */
+const STATUS = { ex: "✓ explored", bu: "● built", un: "○ unexplored" };
+const edgesBox = document.getElementById("edges");
+DATA.edges.forEach(e => {
+  const sec = document.createElement("div");
+  sec.className = "edge-sec";
+  let html = '<div class="edge-head"><span class="rel' + (e.isNew ? "" : " olde") + '">' + e.rel + "</span><h3>" + e.title + "</h3></div>" +
+    '<p class="edge-blurb">' + e.blurb + "</p>";
+  e.questions.forEach(qq => {
+    html += '<details class="q"><summary><span class="qm">Q</span><span class="qt">' + qq.q +
+      '</span><span class="qn">' + qq.answers.length + " answers</span></summary><div class=\"answers\">";
+    qq.answers.forEach(a => {
+      html += '<div class="ans ' + a.status + (a.pick ? " pick" : "") + '">' +
+        '<div class="ans-head"><span class="nm">' + a.name + '</span><span class="st">' + STATUS[a.status] + "</span>" +
+        (a.pick ? '<span class="picktag">current pick</span>' : "") + "</div>" +
+        '<div class="tw"><div class="plus"><b>+</b> ' + a.plus + '</div><div class="minus"><b>−</b> ' + a.minus + "</div></div>" +
+        '<div class="meta">Parameters: <code>' + a.params + "</code> · Seen in: " + a.seen + "</div></div>";
+    });
+    html += "</div></details>";
+  });
+  sec.innerHTML = html;
+  edgesBox.appendChild(sec);
+});
+
+const traitsBox = document.getElementById("traits");
+DATA.traits.forEach(t => {
+  const d = document.createElement("div");
+  d.className = "trait";
+  d.innerHTML = '<div class="tn">' + t.name + '</div><div class="tp">' + t.what + '</div><div class="tr">' + t.rule + "</div>";
+  traitsBox.appendChild(d);
+});
+
+// Node click → highlight that node's edges in the SVG.
+document.querySelectorAll(".node").forEach(n => {
+  n.addEventListener("click", () => {
+    const name = n.dataset.n;
+    const already = n.classList.contains("sel");
+    document.querySelectorAll(".node").forEach(x => x.classList.remove("dim", "sel"));
+    document.querySelectorAll("path.edge").forEach(x => x.classList.remove("dim"));
+    if (already) return;
+    n.classList.add("sel");
+    document.querySelectorAll(".node").forEach(x => { if (x !== n) x.classList.add("dim"); });
+    document.querySelectorAll("path.edge").forEach(x => {
+      if (!x.dataset.n.split(" ").includes(name)) x.classList.add("dim");
+    });
+  });
+});
+</script>
